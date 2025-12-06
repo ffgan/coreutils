@@ -574,14 +574,14 @@ jobs:
         job:
           # - { os , target , cargo-options , default-features,  features , use-cross , toolchain, skip-tests, workspace-tests, skip-package, skip-publish }
         #   - { os: ubuntu-latest  , target: arm-unknown-linux-gnueabihf , features: feat_os_unix_gnueabihf , use-cross: use-cross , skip-tests: true }
-          - { os: ubuntu-24.04-arm  , target: aarch64-unknown-linux-gnu   , features: feat_os_unix_gnueabihf }
+        #   - { os: ubuntu-24.04-arm  , target: aarch64-unknown-linux-gnu   , features: feat_os_unix_gnueabihf }
           - { os: RISCV64  , target: riscv64gc-unknown-linux-gnu   , features: feat_os_unix, use-cross: no}
         #   - { os: ubuntu-latest  , target: aarch64-unknown-linux-musl  , features: feat_os_unix_musl , use-cross: use-cross , skip-tests: true }
           # - { os: ubuntu-latest  , target: x86_64-unknown-linux-gnu    , features: feat_selinux           , use-cross: use-cross }
         #   - { os: ubuntu-latest  , target: i686-unknown-linux-gnu      , features: "feat_os_unix,test_risky_names", use-cross: use-cross }
         #   - { os: ubuntu-latest  , target: i686-unknown-linux-musl     , features: feat_os_unix_musl , use-cross: use-cross }
         #   - { os: ubuntu-latest  , target: x86_64-unknown-linux-gnu    , features: "feat_os_unix,test_risky_names", use-cross: use-cross, skip-publish: true }
-          - { os: ubuntu-latest  , target: x86_64-unknown-linux-gnu    , features: "feat_os_unix,uudoc"   , use-cross: no, workspace-tests: true }
+        #   - { os: ubuntu-latest  , target: x86_64-unknown-linux-gnu    , features: "feat_os_unix,uudoc"   , use-cross: no, workspace-tests: true }
         #   - { os: ubuntu-latest  , target: x86_64-unknown-linux-musl   , features: feat_os_unix_musl , use-cross: use-cross }
         #   - { os: ubuntu-latest  , target: x86_64-unknown-redox        , features: feat_os_unix_redox     , use-cross: redoxer , skip-tests: true }
         #   - { os: ubuntu-latest  , target: wasm32-unknown-unknown      , default-features: false, features: uucore/format, skip-tests: true, skip-package: true, skip-publish: true }
@@ -601,6 +601,12 @@ jobs:
       with:
         toolchain: ${{ env.RUST_MIN_SRV }}
         targets: ${{ matrix.job.target }}
+    - name: Install dependencies for RISC-V
+      if: matrix.job.target == 'riscv64gc-unknown-linux-gnu'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libatomic1 # fix -> /xx/node: error while loading shared libraries: libatomic.so.1: cannot open shared object file: No such file or directory
+
     - uses: Swatinem/rust-cache@v2
       with:
         key: "${{ matrix.job.os }}_${{ matrix.job.target }}"
