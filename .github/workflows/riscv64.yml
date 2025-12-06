@@ -611,6 +611,7 @@ jobs:
       with:
         key: "${{ matrix.job.os }}_${{ matrix.job.target }}"
     - name: Run sccache-cache
+      if: matrix.job.target != 'riscv64gc-unknown-linux-gnu'
       uses: mozilla-actions/sccache-action@v0.0.9
     - name: Initialize workflow variables
       id: vars
