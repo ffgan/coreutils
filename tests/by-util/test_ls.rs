@@ -4838,6 +4838,10 @@ fn test_tabsize_formatting() {
     target_os = "solaris"
 ))]
 #[test]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_device_number() {
     use std::fs::{metadata, read_dir};
     use std::os::unix::fs::{FileTypeExt, MetadataExt};

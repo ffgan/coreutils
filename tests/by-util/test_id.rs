@@ -117,6 +117,10 @@ fn test_id_single_user_non_existing() {
 }
 
 #[test]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_id_name() {
     let ts = TestScenario::new(util_name!());
     for opt in ["--user", "--group", "--groups"] {

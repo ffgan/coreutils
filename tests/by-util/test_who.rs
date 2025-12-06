@@ -32,6 +32,10 @@ fn test_count() {
     all(target_arch = "aarch64", target_os = "linux"),
     ignore = "Issue #7174 - Test not supported on ARM64 Linux"
 )]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_boot() {
     let ts = TestScenario::new(util_name!());
     for opt in ["-b", "--boot", "--b"] {
