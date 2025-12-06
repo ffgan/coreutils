@@ -60,6 +60,10 @@ fn test_invalid_arg() {
 }
 
 #[test]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_byte_sequence() {
     for param in ["-b", "--bytes", "--byt"] {
         for example_seq in EXAMPLE_SEQUENCES {
@@ -85,6 +89,10 @@ fn test_char_sequence() {
 }
 
 #[test]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_field_sequence() {
     for param in ["-f", "--fields", "--fie"] {
         for example_seq in EXAMPLE_SEQUENCES {

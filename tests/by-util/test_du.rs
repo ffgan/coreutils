@@ -967,6 +967,10 @@ fn test_du_one_file_system() {
 
 #[test]
 #[cfg(not(target_os = "openbsd"))]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_du_threshold() {
     let ts = TestScenario::new(util_name!());
     let at = &ts.fixtures;
