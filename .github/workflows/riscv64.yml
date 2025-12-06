@@ -607,7 +607,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y libatomic1 # fix -> /xx/node: error while loading shared libraries: libatomic.so.1: cannot open shared object file: No such file or directory
 
-        sudo apt-get install jq -y
+        sudo apt-get install jq binutils-riscv64-linux-gnu build-essential -y
 
     - uses: Swatinem/rust-cache@v2
       with:
