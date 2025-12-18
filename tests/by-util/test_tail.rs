@@ -4822,6 +4822,10 @@ fn test_obsolete_encoding_windows() {
 
 #[test]
 #[cfg(not(target_vendor = "apple"))] // FIXME: for currently not working platforms
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_following_with_pid() {
     use std::process::Command;
 

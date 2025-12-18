@@ -764,6 +764,10 @@ fn strip_source_file() -> &'static str {
 
 #[test]
 #[cfg(not(windows))]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 // FIXME test runs in a timeout with macos-latest on x86_64 in the CI
 #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
 fn test_install_and_strip() {
@@ -791,6 +795,10 @@ fn test_install_and_strip() {
 #[cfg(not(windows))]
 // FIXME test runs in a timeout with macos-latest on x86_64 in the CI
 #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_install_and_strip_with_program() {
     let scene = TestScenario::new(util_name!());
     let at = &scene.fixtures;

@@ -907,6 +907,10 @@ fn test_env_arg_ignore_signal_special_signals() {
 
 #[test]
 #[cfg(unix)]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_env_arg_ignore_signal_valid_signals() {
     {
         let mut target = Target::new(&["int"]);

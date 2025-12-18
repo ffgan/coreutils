@@ -4838,6 +4838,10 @@ fn test_tabsize_formatting() {
     target_os = "solaris"
 ))]
 #[test]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_device_number() {
     use std::fs::{metadata, read_dir};
     use std::os::unix::fs::{FileTypeExt, MetadataExt};
@@ -6498,7 +6502,7 @@ fn test_f_overrides_sort_flags() {
 
     // Create files with different sizes for predictable sort order
     at.write("small.txt", "a"); // 1 byte
-    at.write("medium.txt", "bb"); // 2 bytes  
+    at.write("medium.txt", "bb"); // 2 bytes
     at.write("large.txt", "ccc"); // 3 bytes
 
     // Get baseline outputs (include -a to match -f behavior which shows all files)
