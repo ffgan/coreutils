@@ -18,10 +18,10 @@ env:
 on:
   pull_request:
   push:
-    tags:
-      - '*'
-    branches:
-      - '*'
+    # tags:
+    #   - '*'
+    # branches:
+    #   - '*'
 
 permissions:
   contents: read # to fetch code (actions/checkout)
