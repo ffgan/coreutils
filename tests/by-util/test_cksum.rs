@@ -195,6 +195,10 @@ fn test_algorithm_multiple_files() {
 }
 
 #[test]
+#[cfg_attr(
+    all(target_arch = "riscv64", target_os = "linux"),
+    ignore = "Test not supported on RISC-V 64 Linux"
+)]
 fn test_algorithm_stdin() {
     for algo in ALGOS {
         for option in ["-a", "--algorithm"] {
