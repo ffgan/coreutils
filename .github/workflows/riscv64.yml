@@ -48,7 +48,7 @@ jobs:
       fail-fast: false
       matrix:
         job:
-            - { os: "Milk-V Pioneer Box"  , target: riscv64gc-unknown-linux-gnu   , features: feat_os_unix, use-cross: no}
+            - { os: "Milk-V Pioneer Box"  , target: riscv64gc-unknown-linux-musl   , features: feat_os_unix, use-cross: no}
     steps:
     - uses: actions/checkout@v6
       with:
