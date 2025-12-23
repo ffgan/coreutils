@@ -190,7 +190,7 @@ jobs:
         unset TARGET_ARCH
         case '${{ matrix.job.target }}' in
           aarch64-*) TARGET_ARCH=arm64 ;;
-          riscv64-*) TARGET_ARCH=riscv64 ;;
+          riscv64gc-*) TARGET_ARCH=riscv64 ;;
           arm-*-*hf) TARGET_ARCH=armhf ;;
           i686-*) TARGET_ARCH=i686 ;;
           x86_64-*) TARGET_ARCH=x86_64 ;;
