@@ -199,7 +199,7 @@ jobs:
           ;;
           riscv64gc-unknown-linux-*)
             sudo apt-get -y update
-            sudo apt-get -y install gcc-riscv64-linux-gnu gcc-riscv64-linux-musl
+            sudo apt-get -y install gcc-riscv64-linux-gnu
           ;;
           *-redox*)
             sudo apt-get -y update
