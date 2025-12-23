@@ -125,7 +125,7 @@ jobs:
       contents: write # to create GitHub release (softprops/action-gh-release)
 
     name: Build
-    needs: [ min_version, deps ]
+    # needs: [ min_version, deps ]
     runs-on: ${{ matrix.job.os }}
     timeout-minutes: 90
     env:
