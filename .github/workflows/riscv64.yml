@@ -72,7 +72,7 @@ jobs:
       if: matrix.job.target != 'riscv64gc-unknown-linux-musl'
       uses: mozilla-actions/sccache-action@v0.0.9
     - name: set up RUSTC_WRAPPER
-      if: matrix.job.target != 'riscv64gc-unknown-linuxmusl'
+      if: matrix.job.target != 'riscv64gc-unknown-linux-musl'
       run: echo  "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
     - name: Initialize workflow variables
       id: vars
