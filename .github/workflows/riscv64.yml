@@ -154,6 +154,11 @@ jobs:
       with:
         toolchain: ${{ env.RUST_MIN_SRV }}
         targets: ${{ matrix.job.target }}
+    - name: Install dependencies for RISC-V
+      if: matrix.job.target == 'riscv64gc-unknown-linux-musl'
+      run: |
+        sudo apt-get update
+        sudo apt-get install jq binutils-riscv64-linux-gnu build-essential -y
     - uses: Swatinem/rust-cache@v2
       with:
         key: "${{ matrix.job.os }}_${{ matrix.job.target }}"
