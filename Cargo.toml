@@ -680,3 +680,10 @@ format_push_string = "allow"
 flat_map_option = "allow"
 from_iter_instead_of_collect = "allow"
 large_types_passed_by_value = "allow"
+
+
+[target.riscv64gc-unknown-linux-musl]
+cc = "riscv64-linux-gnu-gcc"
+cxx = "riscv64-linux-gnu-g++"
+ar = "riscv64-linux-gnu-ar"
+linker = "riscv64-linux-gnu-gcc"
