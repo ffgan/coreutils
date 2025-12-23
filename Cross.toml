@@ -7,4 +7,4 @@ pre-build = [
 passthrough = ["CI", "RUST_BACKTRACE", "CARGO_TERM_COLOR"]
 
 [target.riscv64gc-unknown-linux-musl]
-image = "ghcr.io/cross-rs/riscv64gc-unknown-linux-musl:edge"
+image = "ghcr.io/cross-rs/riscv64gc-unknown-linux-musl:main"
