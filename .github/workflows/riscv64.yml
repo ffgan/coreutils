@@ -26,100 +26,100 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  min_version:
-    name: MinRustV # Minimum supported rust version (aka, MinSRV or MSRV)
-    runs-on: ${{ matrix.job.os }}
-    env:
-      SCCACHE_GHA_ENABLED: "true"
-      RUSTC_WRAPPER: "sccache"
-    strategy:
-      matrix:
-        job:
-          - { os: ubuntu-latest , features: feat_os_unix }
-    steps:
-    - uses: actions/checkout@v6
-      with:
-        persist-credentials: false
-    - uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: ${{ env.RUST_MIN_SRV }}
-        components: rustfmt
-    - uses: taiki-e/install-action@nextest
-    - uses: Swatinem/rust-cache@v2
-    - name: Run sccache-cache
-      uses: mozilla-actions/sccache-action@v0.0.9
-    - name: Initialize workflow variables
-      id: vars
-      shell: bash
-      run: |
-        ## VARs setup
-        outputs() { step_id="${{ github.action }}"; for var in "$@" ; do echo steps.${step_id}.outputs.${var}="${!var}"; echo "${var}=${!var}" >> $GITHUB_OUTPUT; done; }
-        # target-specific options
-        # * CARGO_FEATURES_OPTION
-        unset CARGO_FEATURES_OPTION
-        if [ -n "${{ matrix.job.features }}" ]; then CARGO_FEATURES_OPTION='--features "${{ matrix.job.features }}"' ; fi
-        outputs CARGO_FEATURES_OPTION
-    - name: Confirm MinSRV compatible '*/Cargo.lock'
-      shell: bash
-      run: |
-        ## Confirm MinSRV compatible '*/Cargo.lock'
-        # * '*/Cargo.lock' is required to be in a format that `cargo` of MinSRV can interpret (eg, v1-format for MinSRV < v1.38)
-        for dir in "." "fuzz"; do
-          ( cd "$dir" && cargo fetch --locked --quiet ) || { echo "::error file=$dir/Cargo.lock::Incompatible (or out-of-date) '$dir/Cargo.lock' file; update using \`cd '$dir' && cargo +${{ env.RUST_MIN_SRV }} update\`" ; exit 1 ; }
-        done
-    - name: Install/setup prerequisites
-      shell: bash
-      run: |
-        # Install a package for one of the tests
-        sudo apt-get -y update ; sudo apt-get -y install attr
-    - name: Info
-      shell: bash
-      run: |
-        ## Info
-        # environment
-        echo "## environment"
-        echo "CI='${CI}'"
-        # tooling info display
-        echo "## tooling"
-        which gcc >/dev/null 2>&1 && (gcc --version | head -1) || true
-        rustup -V 2>/dev/null
-        rustup show active-toolchain
-        cargo -V
-        rustc -V
-        cargo tree -V
-        # dependencies
-        echo "## dependency list"
-        ## * using the 'stable' toolchain is necessary to avoid "unexpected '--filter-platform'" errors
-        RUSTUP_TOOLCHAIN=stable cargo fetch --locked --quiet
-        RUSTUP_TOOLCHAIN=stable cargo tree --no-dedupe --locked -e=no-dev --prefix=none ${{ steps.vars.outputs.CARGO_FEATURES_OPTION }} | grep -vE "$PWD" | sort --unique
-    - name: Test
-      run: cargo nextest run --hide-progress-bar --profile ci ${{ steps.vars.outputs.CARGO_FEATURES_OPTION }} -p uucore -p coreutils
-      env:
-        RUSTFLAGS: "-Awarnings"
-        RUST_BACKTRACE: "1"
+  # min_version:
+  #   name: MinRustV # Minimum supported rust version (aka, MinSRV or MSRV)
+  #   runs-on: ${{ matrix.job.os }}
+  #   env:
+  #     SCCACHE_GHA_ENABLED: "true"
+  #     RUSTC_WRAPPER: "sccache"
+  #   strategy:
+  #     matrix:
+  #       job:
+  #         - { os: ubuntu-latest , features: feat_os_unix }
+  #   steps:
+  #   - uses: actions/checkout@v6
+  #     with:
+  #       persist-credentials: false
+  #   - uses: dtolnay/rust-toolchain@master
+  #     with:
+  #       toolchain: ${{ env.RUST_MIN_SRV }}
+  #       components: rustfmt
+  #   - uses: taiki-e/install-action@nextest
+  #   - uses: Swatinem/rust-cache@v2
+  #   - name: Run sccache-cache
+  #     uses: mozilla-actions/sccache-action@v0.0.9
+  #   - name: Initialize workflow variables
+  #     id: vars
+  #     shell: bash
+  #     run: |
+  #       ## VARs setup
+  #       outputs() { step_id="${{ github.action }}"; for var in "$@" ; do echo steps.${step_id}.outputs.${var}="${!var}"; echo "${var}=${!var}" >> $GITHUB_OUTPUT; done; }
+  #       # target-specific options
+  #       # * CARGO_FEATURES_OPTION
+  #       unset CARGO_FEATURES_OPTION
+  #       if [ -n "${{ matrix.job.features }}" ]; then CARGO_FEATURES_OPTION='--features "${{ matrix.job.features }}"' ; fi
+  #       outputs CARGO_FEATURES_OPTION
+  #   - name: Confirm MinSRV compatible '*/Cargo.lock'
+  #     shell: bash
+  #     run: |
+  #       ## Confirm MinSRV compatible '*/Cargo.lock'
+  #       # * '*/Cargo.lock' is required to be in a format that `cargo` of MinSRV can interpret (eg, v1-format for MinSRV < v1.38)
+  #       for dir in "." "fuzz"; do
+  #         ( cd "$dir" && cargo fetch --locked --quiet ) || { echo "::error file=$dir/Cargo.lock::Incompatible (or out-of-date) '$dir/Cargo.lock' file; update using \`cd '$dir' && cargo +${{ env.RUST_MIN_SRV }} update\`" ; exit 1 ; }
+  #       done
+  #   - name: Install/setup prerequisites
+  #     shell: bash
+  #     run: |
+  #       # Install a package for one of the tests
+  #       sudo apt-get -y update ; sudo apt-get -y install attr
+  #   - name: Info
+  #     shell: bash
+  #     run: |
+  #       ## Info
+  #       # environment
+  #       echo "## environment"
+  #       echo "CI='${CI}'"
+  #       # tooling info display
+  #       echo "## tooling"
+  #       which gcc >/dev/null 2>&1 && (gcc --version | head -1) || true
+  #       rustup -V 2>/dev/null
+  #       rustup show active-toolchain
+  #       cargo -V
+  #       rustc -V
+  #       cargo tree -V
+  #       # dependencies
+  #       echo "## dependency list"
+  #       ## * using the 'stable' toolchain is necessary to avoid "unexpected '--filter-platform'" errors
+  #       RUSTUP_TOOLCHAIN=stable cargo fetch --locked --quiet
+  #       RUSTUP_TOOLCHAIN=stable cargo tree --no-dedupe --locked -e=no-dev --prefix=none ${{ steps.vars.outputs.CARGO_FEATURES_OPTION }} | grep -vE "$PWD" | sort --unique
+  #   - name: Test
+  #     run: cargo nextest run --hide-progress-bar --profile ci ${{ steps.vars.outputs.CARGO_FEATURES_OPTION }} -p uucore -p coreutils
+  #     env:
+  #       RUSTFLAGS: "-Awarnings"
+  #       RUST_BACKTRACE: "1"
 
-  deps:
-    name: Dependencies
-    runs-on: ${{ matrix.job.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        job:
-          - { os: ubuntu-latest , features: feat_os_unix }
-    steps:
-    - uses: actions/checkout@v6
-      with:
-        persist-credentials: false
-    - uses: dtolnay/rust-toolchain@stable
-    - uses: Swatinem/rust-cache@v2
-    - name: "`cargo update` testing"
-      shell: bash
-      run: |
-        ## `cargo update` testing
-        # * convert any errors/warnings to GHA UI annotations; ref: <https://help.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-a-warning-message>
-        for dir in "." "fuzz"; do
-          ( cd "$dir" && cargo fetch --locked --quiet ) || { echo "::error file=$dir/Cargo.lock::'$dir/Cargo.lock' file requires update (use \`cd '$dir' && cargo +${{ env.RUST_MIN_SRV }} update\`)" ; exit 1 ; }
-        done
+  # deps:
+  #   name: Dependencies
+  #   runs-on: ${{ matrix.job.os }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       job:
+  #         - { os: ubuntu-latest , features: feat_os_unix }
+  #   steps:
+  #   - uses: actions/checkout@v6
+  #     with:
+  #       persist-credentials: false
+  #   - uses: dtolnay/rust-toolchain@stable
+  #   - uses: Swatinem/rust-cache@v2
+  #   - name: "`cargo update` testing"
+  #     shell: bash
+  #     run: |
+  #       ## `cargo update` testing
+  #       # * convert any errors/warnings to GHA UI annotations; ref: <https://help.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-a-warning-message>
+  #       for dir in "." "fuzz"; do
+  #         ( cd "$dir" && cargo fetch --locked --quiet ) || { echo "::error file=$dir/Cargo.lock::'$dir/Cargo.lock' file requires update (use \`cd '$dir' && cargo +${{ env.RUST_MIN_SRV }} update\`)" ; exit 1 ; }
+  #       done
   build:
     permissions:
       contents: write # to create GitHub release (softprops/action-gh-release)
@@ -137,15 +137,15 @@ jobs:
       matrix:
         job:
           # - { os , target , cargo-options , default-features,  features , use-cross , toolchain, skip-tests, workspace-tests, skip-package, skip-publish }
-          - { os: ubuntu-latest  , target: arm-unknown-linux-gnueabihf , features: feat_os_unix_gnueabihf , use-cross: use-cross , skip-tests: true }
-          - { os: ubuntu-24.04-arm  , target: aarch64-unknown-linux-gnu   , features: feat_os_unix_gnueabihf }
-          - { os: ubuntu-latest  , target: aarch64-unknown-linux-musl  , features: feat_os_unix_musl , use-cross: use-cross , skip-tests: true }
+          # - { os: ubuntu-latest  , target: arm-unknown-linux-gnueabihf , features: feat_os_unix_gnueabihf , use-cross: use-cross , skip-tests: true }
+          # - { os: ubuntu-24.04-arm  , target: aarch64-unknown-linux-gnu   , features: feat_os_unix_gnueabihf }
+          # - { os: ubuntu-latest  , target: aarch64-unknown-linux-musl  , features: feat_os_unix_musl , use-cross: use-cross , skip-tests: true }
           - { os: ubuntu-latest  , target: riscv64gc-unknown-linux-musl  , features: feat_os_unix_musl , use-cross: use-cross , skip-tests: true }
           # - { os: ubuntu-latest  , target: x86_64-unknown-linux-gnu    , features: feat_selinux           , use-cross: use-cross }
-          - { os: ubuntu-latest  , target: x86_64-unknown-linux-gnu    , features: "feat_os_unix,test_risky_names", use-cross: use-cross, skip-publish: true }
-          - { os: ubuntu-latest  , target: x86_64-unknown-linux-gnu    , features: "feat_os_unix,uudoc"   , use-cross: no, workspace-tests: true }
-          - { os: ubuntu-latest  , target: x86_64-unknown-linux-musl   , features: feat_os_unix_musl , use-cross: use-cross }
-          - { os: ubuntu-latest  , target: x86_64-unknown-redox        , features: feat_os_unix_redox     , use-cross: redoxer , skip-tests: true }
+          # - { os: ubuntu-latest  , target: x86_64-unknown-linux-gnu    , features: "feat_os_unix,test_risky_names", use-cross: use-cross, skip-publish: true }
+          # - { os: ubuntu-latest  , target: x86_64-unknown-linux-gnu    , features: "feat_os_unix,uudoc"   , use-cross: no, workspace-tests: true }
+          # - { os: ubuntu-latest  , target: x86_64-unknown-linux-musl   , features: feat_os_unix_musl , use-cross: use-cross }
+          # - { os: ubuntu-latest  , target: x86_64-unknown-redox        , features: feat_os_unix_redox     , use-cross: redoxer , skip-tests: true }
     steps:
     - uses: actions/checkout@v6
       with:
