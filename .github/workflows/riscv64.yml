@@ -58,7 +58,7 @@ jobs:
         toolchain: ${{ env.RUST_MIN_SRV }}
         targets: ${{ matrix.job.target }}
     - name: Install dependencies for RISC-V
-      if: matrix.job.target == 'riscv64gc-unknown-linux-gnu'
+      if: matrix.job.target == 'riscv64gc-unknown-linux-musl'
       run: |
         sudo apt-get update
         sudo apt-get install -y libatomic1 # fix -> /xx/node: error while loading shared libraries: libatomic.so.1: cannot open shared object file: No such file or directory
